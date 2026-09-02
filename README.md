@@ -2,7 +2,7 @@
 
 Base, standard configuration I run with Claude Code: a single canonical `AGENTS.md` shared with OpenCode and AbacusAI CLI, plus a small enforcement layer of Claude Code hooks.
 
-Full writeup: link coming soon.
+Full writeup: [My AI setup: Claude, Abacus, and OpenCode](https://esli.blog/posts/ai-setup-claude-opencode/).
 
 ## Tools this targets
 
