@@ -70,3 +70,28 @@ chmod +x ~/.claude/hooks/*.sh
 ```
 
 Then merge the `hooks` block from `settings.example.json` into `~/.claude/settings.json`.
+
+## Skills
+
+Skills follow the same source-of-truth pattern as `AGENTS.md`. All three tools accept the same format, a directory named after the skill containing a `SKILL.md` with `name`/`description` frontmatter, but each one scans its own user-scoped directory:
+
+- **Claude Code**: `~/.claude/skills/`
+- **OpenCode**: `~/.config/opencode/skills/`
+- **AbacusAI**: `~/.abacusai/skills/`
+
+Two ways to keep one canonical copy:
+
+1. **Version the skill in your regular GIT path** (e.g. `~/GIT/<skill-repo>` with `SKILL.md` at the root) and symlink it into all three CLIs.
+2. **Keep the skill inside one CLI's directory** and symlink it into the other two.
+
+Either way, one edit lands in the canonical copy and every CLI reads the same file. The frontmatter `name` must match the directory name.
+
+Example, `humanize-br` ([github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br)), a skill versioned at `~/GIT/humanize-br` and symlinked into all three:
+
+```bash
+ln -s ~/GIT/humanize-br ~/.claude/skills/humanize-br
+ln -s ~/GIT/humanize-br ~/.config/opencode/skills/humanize-br
+ln -s ~/GIT/humanize-br ~/.abacusai/skills/humanize-br
+```
+
+`v-repo-audit` uses the other arrangement: the canonical copy lives in OpenCode's directory (`~/.config/opencode/skills/v-repo-audit`) with symlinks from Claude Code and AbacusAI. Note the difference from `AGENTS.md`: AbacusAI has no user-global instructions file, but it does read user-global skills, so skills are the reliable way to carry personal behavior into AbacusAI sessions.
