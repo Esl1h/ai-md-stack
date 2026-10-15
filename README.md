@@ -27,7 +27,7 @@ ai-md-stack/
 
 ## AGENTS.md / CLAUDE.md
 
-`CLAUDE.md` is a relative symlink to `AGENTS.md` (`ln -s AGENTS.md CLAUDE.md`), so both Claude Code and OpenCode read the same file. Claude Code only recognizes `CLAUDE.md` natively; OpenCode and AbacusAI CLI read `AGENTS.md` directly.
+OpenCode and AbacusAI CLI read `AGENTS.md` directly. Claude Code reads a project `AGENTS.md` natively since v2.1.277, when the project has no `CLAUDE.md`, but has no user-level equivalent: as a global file, `~/.claude/AGENTS.md` needs a `~/.claude/CLAUDE.md` symlink (`ln -s AGENTS.md CLAUDE.md`). The `CLAUDE.md` symlink in this repository is no longer required at project scope, and it's harmless: Claude Code reads the content once.
 
 This part is shared: AbacusAI CLI only loads `AGENTS.md` from the project workspace, not from a user-level global path, so its copy has to live in each project root rather than symlinked from a single global location.
 
@@ -69,25 +69,19 @@ Then merge the `hooks` block from `settings.example.json` into `~/.claude/settin
 
 ## Skills
 
-Skills follow the same source-of-truth pattern as `AGENTS.md`. All three tools accept the same format, a directory named after the skill containing a `SKILL.md` with `name`/`description` frontmatter, but each one scans its own user-scoped directory:
+All three tools accept the same skill format, a directory named after the skill containing a `SKILL.md` with `name`/`description` frontmatter. They differ in where they look:
 
-- **Claude Code**: `~/.claude/skills/`
-- **OpenCode**: `~/.config/opencode/skills/`
-- **AbacusAI**: `~/.abacusai/skills/`
+- **Claude Code**: only `~/.claude/skills/`
+- **OpenCode**: `~/.config/opencode/skills/`, `~/.claude/skills/`, and `~/.agents/skills/`
+- **AbacusAI**: `~/.abacusai/skills/` and `~/.agents/skills/`
 
-Two ways to keep one canonical copy:
-
-1. **Version the skill in your regular GIT path** (e.g. `~/GIT/<skill-repo>` with `SKILL.md` at the root) and symlink it into all three CLIs.
-2. **Keep the skill inside one CLI's directory** and symlink it into the other two.
-
-Either way, one edit lands in the canonical copy and every CLI reads the same file. The frontmatter `name` must match the directory name.
-
-Example, `humanize-br` ([github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br)), a skill versioned at `~/GIT/humanize-br` and symlinked into all three:
+`~/.agents/skills/` is read by every tool except Claude Code, and it's where the [`skills`](https://github.com/vercel-labs/skills) CLI (`npx skills add <repo>`) installs, so it's the canonical folder. Claude Code needs one more symlink per skill. A skill versioned in its own repository, such as `humanize-br` ([github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br)), gets two links:
 
 ```bash
-ln -s ~/GIT/humanize-br ~/.claude/skills/humanize-br
-ln -s ~/GIT/humanize-br ~/.config/opencode/skills/humanize-br
-ln -s ~/GIT/humanize-br ~/.abacusai/skills/humanize-br
+ln -s ~/GIT/humanize-br ~/.agents/skills/humanize-br
+ln -s ../../.agents/skills/humanize-br ~/.claude/skills/humanize-br
 ```
 
-`v-repo-audit` uses the other arrangement: the canonical copy lives in OpenCode's directory (`~/.config/opencode/skills/v-repo-audit`) with symlinks from Claude Code and AbacusAI. Note the difference from `AGENTS.md`: AbacusAI has no user-global instructions file, but it does read user-global skills, so skills are the reliable way to carry personal behavior into AbacusAI sessions.
+Don't also keep a copy in `~/.config/opencode/skills/`: OpenCode reads all three folders, and with duplicate names only the first one found loads. The frontmatter `name` must match the directory name.
+
+AbacusAI has no user-global instructions file, but it does read user-global skills, so skills are the reliable way to carry personal behavior into AbacusAI sessions.
