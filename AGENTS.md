@@ -14,7 +14,7 @@
 
 ## Git Commits
 - Commit messages MUST describe only the *what* and *why* of the change.
-- Do NOT include tooling metadata, trailers, attribution, or co-author lines (e.g. `Co-Authored-By`, `Signed-off-by` unless required by the project, `Generated-by`, `Made-with`, or any IDE/editor/assistant reference).
+- Do NOT include tooling metadata, trailers, attribution, or co-author lines (e.g. `Co-Authored-By`, `Signed-off-by`, `Generated-by`, `Made-with`, or any IDE/editor/assistant reference).
 - Keep messages tool-agnostic: nothing about the environment used to author the code belongs in the history.
 - One commit per logical change (ideally one file/concern at a time).
 - Follow Conventional Commits v1.0.0: https://www.conventionalcommits.org/en/v1.0.0/
