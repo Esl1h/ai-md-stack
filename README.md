@@ -17,16 +17,12 @@ ai-md-stack/
 ├── AGENTS.md                        canonical instruction file
 ├── CLAUDE.md -> AGENTS.md           symlink, same content
 ├── settings.example.json            hook registration for Claude Code
-├── hooks/                           Claude Code enforcement layer
-│   ├── _common.sh
-│   ├── mutation-guard.sh
-│   ├── commit-guard.sh
-│   ├── session-context.sh
-│   └── redact-secrets.sh
-└── examples/opencode-with-global/   recovers the global AGENTS.md in OpenCode
-    ├── opencode.json
-    ├── AGENTS.md
-    └── README.md
+└── hooks/                           Claude Code enforcement layer
+    ├── _common.sh
+    ├── mutation-guard.sh
+    ├── commit-guard.sh
+    ├── session-context.sh
+    └── redact-secrets.sh
 ```
 
 ## AGENTS.md / CLAUDE.md
@@ -37,7 +33,7 @@ This part is shared: AbacusAI CLI only loads `AGENTS.md` from the project worksp
 
 The file itself is based on the structure from [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills/tree/main), evolved further through running Claude Code across several different environments.
 
-OpenCode doesn't concatenate local and global instructions the way Claude Code does: once a project has its own `AGENTS.md`, the global one is ignored entirely. See `examples/opencode-with-global/` for the `opencode.json` workaround.
+OpenCode loads the global `~/.config/opencode/AGENTS.md` together with the project's `AGENTS.md`, so a project with its own file keeps the global rules without extra configuration.
 
 ## hooks/
 
