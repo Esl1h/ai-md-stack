@@ -18,8 +18,8 @@ line="$(printf '%s' "$payload" | jq -r '.tool_input.command // empty')"
 escape_hint="Re-run with ALLOW_MUTATION=1 <command> if intentional."
 write_verbs='create|delete|remove|terminate|modify|update|put|attach|detach|revoke|authorize|disable|enable|stop|start|reboot|deregister|register|associate|disassociate|tag|untag|reset|restore|purge|cancel'
 
-if is_command_invoked "$line" 'aws' \
-  && printf '%s' "$line" | grep -qE "aws[[:space:]]+[a-z0-9-]+[[:space:]]+(${write_verbs})-"; then
+if invocation "$line" aws \
+  | grep -qE "aws[[:space:]]+[a-z0-9-]+[[:space:]]+(${write_verbs})-"; then
   deny "AWS write call blocked. $escape_hint"
 fi
 
@@ -35,8 +35,8 @@ if invocation "$line" kubectl \
   deny "kubectl write call blocked. $escape_hint"
 fi
 
-if is_command_invoked "$line" 'terraform' \
-  && printf '%s' "$line" | grep -qE "terraform[[:space:]]+(apply|destroy|import|taint|untaint)\b|terraform[[:space:]]+state[[:space:]]+(rm|mv|push|replace-provider)\b"; then
+if invocation "$line" terraform \
+  | grep -qE "terraform[[:space:]]+(apply|destroy|import|taint|untaint)\b|terraform[[:space:]]+state[[:space:]]+(rm|mv|push|replace-provider)\b"; then
   deny "terraform write call blocked. $escape_hint"
 fi
 
