@@ -16,6 +16,12 @@ line="$(printf '%s' "$payload" | jq -r '.tool_input.command // empty')"
 is_command_invoked "$line" 'git' || exit 0
 printf '%s' "$line" | grep -qE '(^|[;&|(]|&&|\|\|)[[:space:]]*(sudo[[:space:]]+)?git[[:space:]]+commit\b' || exit 0
 
+# Strip quoted strings so a message containing "-n" doesn't trip the check.
+unquoted="$(printf '%s' "$line" | sed -E "s/'[^']*'/''/g; s/\"[^\"]*\"/\"\"/g")"
+if printf '%s' "$unquoted" | grep -qE 'git[[:space:]]+commit\b.*[[:space:]](--no-verify|-n)([[:space:]]|$)'; then
+  deny "git commit --no-verify blocked (AGENTS.md: no bypassing checks without justification)."
+fi
+
 subject=""
 if printf '%s' "$line" | grep -qE "<<-?[[:space:]]*['\"]?EOF"; then
   subject="$(printf '%s\n' "$line" | sed -n "/<<-\{0,1\}[[:space:]]*['\"]\{0,1\}EOF/{n;p;q}")"
@@ -46,7 +52,7 @@ if printf '%s' "$subject" | grep -qE '\.[[:space:]]*$'; then
 Got: $subject"
 fi
 
-if printf '%s' "$line" | grep -qiE '(Co-Authored-By|Generated-by|Made-with):'; then
+if printf '%s' "$line" | grep -qiE '(Co-Authored-By|Signed-off-by|Generated-by|Made-with):'; then
   deny "Commit message includes a forbidden trailer (AGENTS.md: no tooling attribution)."
 fi
 
