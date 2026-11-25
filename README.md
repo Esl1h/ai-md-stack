@@ -94,4 +94,8 @@ AbacusAI has no user-global instructions file, but it does read user-global skil
 Skills are discovered by their `description`, so `AGENTS.md` does not list them. Add a line there only when a skill must be forced for a specific case (e.g. "Before writing pt-BR prose, use the humanize-br skill"). This list exists so the stack can be rebuilt on a new machine:
 
 - `humanize-br`: [github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br), symlinked as shown above.
-- `ponytail`: source TBD.
+- `humanize-ai-slop`: [github.com/Esl1h/humanize-ai-slop](https://github.com/Esl1h/humanize-ai-slop), symlinked the same way.
+- `hallmark`: [github.com/Nutlope/hallmark](https://github.com/Nutlope/hallmark), installed with `npx skills add`.
+- `find-skills`: [github.com/vercel-labs/skills](https://github.com/vercel-labs/skills), installed with `npx skills add`.
+- `cf-cli`, `diagram-design`, `v-repo-audit`: plain folders in `~/.agents/skills/`; no source is recorded, so copy them from an existing host.
+- `ponytail`: a Claude Code plugin, not a skill folder. Source: [github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Install with `/plugin marketplace add DietrichGebert/ponytail`, then `/plugin install ponytail@ponytail`.
