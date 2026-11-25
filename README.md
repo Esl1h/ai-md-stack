@@ -41,7 +41,7 @@ OpenCode loads the global `~/.config/opencode/AGENTS.md` together with the proje
 
 Claude Code only. Doesn't port to OpenCode's plugin system (`tool.execute.before`/`after`) or to AbacusAI CLI, which has no documented hook mechanism.
 
-- `_common.sh`: shared helpers. `is_command_invoked()` makes a guard fire on `terraform plan` but not on `jq --arg c 'terraform plan'`; `invocation()` scopes a flag check to its own command, so `git commit ... && git log -n 1` is not read as `commit -n`.
+- `_common.sh`: the shared `invocation()` helper. It matches a command only in command position and blanks quoted strings, so a guard fires on `terraform plan` but not on `jq --arg c 'terraform plan'`, and a flag check stays inside its own command: `git commit ... && git log -n 1` is not read as `commit -n`.
 - `mutation-guard.sh` (`PreToolUse`): blocks write verbs on `aws`/`gh`/`kubectl`/`terraform` and `git push` force variants. `kubectl --dry-run` passes. Escape hatch: prefix the command with `ALLOW_MUTATION=1`.
 - `commit-guard.sh` (`PreToolUse`): validates `git commit` subjects against the Conventional Commits rules already documented in `AGENTS.md`, rejects attribution trailers, and blocks `--no-verify` (same `ALLOW_MUTATION=1` prefix).
 - `test.sh`: runs synthetic `PreToolUse` payloads through the two guards. `hooks/test.sh ~/.claude/hooks` tests the installed copies.
