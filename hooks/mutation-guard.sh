@@ -38,4 +38,9 @@ if is_command_invoked "$line" 'terraform' \
   deny "terraform write call blocked. $escape_hint"
 fi
 
+if is_command_invoked "$line" 'git' \
+  && printf '%s' "$line" | grep -qE "git[[:space:]]+push\b.*(--force\b|--force-with-lease\b|[[:space:]]-f([[:space:]]|$)|[[:space:]]\+[^[:space:]]+)"; then
+  deny "git force push blocked. $escape_hint"
+fi
+
 exit 0
