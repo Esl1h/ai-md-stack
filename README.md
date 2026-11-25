@@ -85,3 +85,10 @@ ln -s ../../.agents/skills/humanize-br ~/.claude/skills/humanize-br
 Don't also keep a copy in `~/.config/opencode/skills/`: OpenCode reads all three folders, and with duplicate names only the first one found loads. The frontmatter `name` must match the directory name.
 
 AbacusAI has no user-global instructions file, but it does read user-global skills, so skills are the reliable way to carry personal behavior into AbacusAI sessions.
+
+### Skills in use
+
+Skills are discovered by their `description`, so `AGENTS.md` does not list them. Add a line there only when a skill must be forced for a specific case (e.g. "Before writing pt-BR prose, use the humanize-br skill"). This list exists so the stack can be rebuilt on a new machine:
+
+- `humanize-br`: [github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br), symlinked as shown above.
+- `ponytail`: source TBD.
