@@ -23,8 +23,8 @@ if is_command_invoked "$line" 'aws' \
   deny "AWS write call blocked. $escape_hint"
 fi
 
-if is_command_invoked "$line" 'gh' \
-  && printf '%s' "$line" | grep -qE "gh[[:space:]]+([a-z-]+[[:space:]]+(create|close|merge|delete|edit|reopen|lock|unlock|archive|rename|set|remove|upload|run)\b|api[[:space:]]+.*-X[[:space:]]+(POST|PUT|PATCH|DELETE))"; then
+if invocation "$line" gh \
+  | grep -qE "gh[[:space:]]+([a-z-]+[[:space:]]+(create|close|merge|delete|edit|reopen|lock|unlock|archive|rename|set|remove|upload|run)\b|api[[:space:]]+.*-X[[:space:]]+(POST|PUT|PATCH|DELETE))"; then
   deny "gh write call blocked. $escape_hint"
 fi
 
