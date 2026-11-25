@@ -44,6 +44,8 @@ truncate_keep_ends() {
   fi
 }
 
+# denoise is grep -v: it exits 1 when every line was filtered out, which under
+# pipefail would abort the hook. Empty output is a valid result, not an error.
 new_stdout="$(printf '%s' "$stdout" | redact | denoise || true)"
 new_stderr="$(printf '%s' "$stderr" | redact | denoise || true)"
 new_stdout="$(truncate_keep_ends "$new_stdout")"
