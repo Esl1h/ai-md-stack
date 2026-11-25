@@ -100,7 +100,8 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ## Stop Conditions
 - After 2 failed attempts with the same approach, stop and report findings instead of iterating blindly.
 
-## Toolchains
+## Toolchain Defaults
+- Only when the project defines no checks of its own; CI, Makefile, and package scripts win.
 - Python: `ruff check && ruff format --check && pytest`
 - Rust: `cargo fmt --check && cargo clippy -- -D warnings && cargo test`
 - V: `v fmt -verify . && v vet . && v test .`
