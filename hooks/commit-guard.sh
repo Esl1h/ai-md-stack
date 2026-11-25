@@ -13,12 +13,10 @@ payload="$(cat)"
 line="$(printf '%s' "$payload" | jq -r '.tool_input.command // empty')"
 [ -z "$line" ] && exit 0
 
-is_command_invoked "$line" 'git' || exit 0
-printf '%s' "$line" | grep -qE '(^|[;&|(]|&&|\|\|)[[:space:]]*(sudo[[:space:]]+)?git[[:space:]]+commit\b' || exit 0
+commit="$(invocation "$line" git | grep -E 'git[[:space:]]+commit\b' || true)" # no match: not a commit
+[ -z "$commit" ] && exit 0
 
-# Strip quoted strings so a message containing "-n" doesn't trip the check.
-unquoted="$(printf '%s' "$line" | sed -E "s/'[^']*'/''/g; s/\"[^\"]*\"/\"\"/g")"
-if printf '%s' "$unquoted" | grep -qE 'git[[:space:]]+commit\b.*[[:space:]](--no-verify|-n)([[:space:]]|$)'; then
+if printf '%s' "$commit" | grep -qE '[[:space:]](--no-verify|-n)([[:space:]]|$)'; then
   deny "git commit --no-verify blocked (AGENTS.md: no bypassing checks without justification)."
 fi
 
