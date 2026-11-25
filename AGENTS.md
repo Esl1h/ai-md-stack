@@ -28,8 +28,8 @@
 - Think before acting. Read existing files before writing code.
 - Be concise in output but thorough in reasoning.
 - Prefer editing over rewriting whole files.
-- Do not re-read files you have already read unless the file may have changed.
-- Test your code before declaring done.
+- Do not re-read files you have already read unless the file may have changed or was only partially read.
+- Verify before declaring done (see Verification).
 - No sycophantic openers or closing fluff.
 - Keep solutions simple and direct.
 - Do not create more than a few new files without confirming scope first.
@@ -76,6 +76,36 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 ~~~
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## Verification
+- Find the project's check commands in CI workflows, Makefile/justfile, package.json, Cargo.toml. Run what CI runs.
+- Never claim "tests pass" or "works" without running them in this session; quote the command and result.
+- If something cannot be run here, say so explicitly; do not imply it was verified.
+- Behavior changes: exercise the real entry point (CLI call, HTTP request, UI), not only unit tests.
+- IaC: `terraform fmt -check && terraform validate && terraform plan`; k8s: `kubectl apply --dry-run=server` or kubeconform; Helm: `helm template | kubeconform`.
+
+## Bug Fixes
+- Reproduce first: the regression test must fail before the fix and pass after. Keep it in the suite.
+- Fix the root cause, not the symptom. If the same pattern exists elsewhere, list it; don't fix it unasked.
+
+## Test Integrity
+- Never delete, skip, or weaken tests/asserts to get green. Changing an existing test requires stating why.
+- No lint/shellcheck suppressions, `--no-verify`, or blind snapshot updates without explicit justification.
+
+## Errors and Dependencies
+- Never swallow errors: no empty catch, no `|| true` without a comment explaining why.
+- No new dependencies without asking; prefer stdlib; pin versions.
+
+## Stop Conditions
+- After 2 failed attempts with the same approach, stop and report findings instead of iterating blindly.
+
+## Toolchains
+- Python: `ruff check && ruff format --check && pytest`
+- Rust: `cargo fmt --check && cargo clippy -- -D warnings && cargo test`
+- V: `v fmt -verify . && v vet . && v test .`
+
+## Done Report
+- End with: what changed, how it was verified (commands), what was not verified, known risks.
 
 ## Shell / Scripts
 - zsh is the interactive shell; validate interactive customizations in `~/.zshrc`.
