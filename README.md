@@ -42,8 +42,8 @@ OpenCode loads the global `~/.config/opencode/AGENTS.md` together with the proje
 Claude Code only. Doesn't port to OpenCode's plugin system (`tool.execute.before`/`after`) or to AbacusAI CLI, which has no documented hook mechanism.
 
 - `_common.sh`: shared `is_command_invoked()` helper, so a guard fires on `terraform plan` but not on `jq --arg c 'terraform plan'`.
-- `mutation-guard.sh` (`PreToolUse`): blocks write verbs on `aws`/`gh`/`kubectl`/`terraform`, with an explicit `ALLOW_MUTATION=1` escape hatch.
-- `commit-guard.sh` (`PreToolUse`): validates `git commit` subjects against the Conventional Commits rules already documented in `AGENTS.md`.
+- `mutation-guard.sh` (`PreToolUse`): blocks write verbs on `aws`/`gh`/`kubectl`/`terraform` and `git push` force variants, with an explicit `ALLOW_MUTATION=1` escape hatch.
+- `commit-guard.sh` (`PreToolUse`): validates `git commit` subjects against the Conventional Commits rules already documented in `AGENTS.md`, rejects attribution trailers, and blocks `--no-verify`.
 - `session-context.sh` (`SessionStart`): injects current branch, dirty file count, and last commit into context.
 - `redact-secrets.sh` (`PostToolUse`): redacts leaked secrets (GitHub/OpenAI/Anthropic tokens, AWS access keys, PEM blocks) from command output, strips known noise, and truncates large output, via `updatedToolOutput`.
 
