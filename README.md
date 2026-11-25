@@ -56,6 +56,27 @@ All shellcheck-clean and `bash -n` validated.
 
 Also running [RTK](https://www.rtk-ai.app/) (Rust Token Killer), a CLI proxy that rewrites shell commands before execution to cut token usage. Registered as its own `PreToolUse` hook, separate from the ones in `hooks/`.
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh
+rtk init -g --opencode
+```
+
+`rtk init -g` registers the hook and writes `~/.claude/RTK.md`, plus the `@RTK.md` import that ends `AGENTS.md`. `--opencode` also installs the OpenCode plugin (`~/.config/opencode/plugins/rtk.ts`). Those files are generated, so they are not versioned here.
+
+## ai-memory
+
+[ai-memory](https://github.com/akitaonrails/ai-memory) gives the agents long-term memory: lifecycle hooks, an MCP server and skills. On this host it is wired into Claude Code, OpenCode and AbacusAI CLI. Its hooks carry machine-specific paths and a local port, so `settings.example.json` does not include them.
+
+```bash
+curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+ai-memory setup
+ai-memory setup --agent opencode2
+```
+
+`setup` shows its plan and asks before applying, and re-running changes nothing. OpenCode 2 is only wired when named with `--agent`. It writes `~/.config/opencode/plugins/ai-memory-opencode2.ts`, which is generated and not versioned.
+
+Both installers pipe a remote script to `sh`: read the script before running it.
+
 ## Usage
 
 ```bash
