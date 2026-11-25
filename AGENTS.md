@@ -23,6 +23,7 @@
 - Reference issues/tickets in the footer (e.g. `Refs: #123`), not the subject.
 - Never bundle unrelated changes; split refactors from behavior changes.
 - Do NOT auto-generate or template commit messages; write them from the diff.
+- Do not force push without explicit user approval; prefer `--force-with-lease`.
 
 ## Approach
 - Think before acting. Read existing files before writing code.
