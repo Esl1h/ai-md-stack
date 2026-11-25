@@ -2,15 +2,6 @@
 # shellcheck shell=bash
 # Shared helpers, sourced by the other ~/.claude/hooks/*.sh scripts.
 
-is_command_invoked() {
-  local line="$1" name="$2"
-  line=$(printf '%s' "$line" | tr '\n' ';')
-  line=$(printf '%s' "$line" \
-    | sed -E "s/'[^']*'/''/g" \
-    | sed -E 's/"[^"]*"/""/g')
-  printf '%s' "$line" | grep -qE "(^|[;&|(]|&&|\|\|)[[:space:]]*(sudo[[:space:]]+)?${name}([[:space:]]|$)"
-}
-
 # Prints each `<name> ...` invocation up to the next shell separator, with
 # quoted strings blanked, so a guard checks one command's flags and not its
 # neighbours' (`git commit ... && git log -n 1`).
