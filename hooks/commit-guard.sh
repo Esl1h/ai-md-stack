@@ -21,8 +21,8 @@ if printf '%s' "$commit" | grep -qE '[[:space:]](--no-verify|-n)([[:space:]]|$)'
 fi
 
 subject=""
-if printf '%s' "$line" | grep -qE "<<-?[[:space:]]*['\"]?EOF"; then
-  subject="$(printf '%s\n' "$line" | sed -n "/<<-\{0,1\}[[:space:]]*['\"]\{0,1\}EOF/{n;p;q}")"
+if printf '%s' "$line" | grep -qE "git[[:space:]]+commit\b.*<<-?[[:space:]]*['\"]?EOF"; then
+  subject="$(printf '%s\n' "$line" | sed -n "/git[[:space:]]\{1,\}commit.*<<-\{0,1\}[[:space:]]*['\"]\{0,1\}EOF/{n;p;q}")"
 elif [[ "$line" =~ -m[[:space:]]+\"([^\"]*)\" ]]; then
   subject="${BASH_REMATCH[1]}"
 elif [[ "$line" =~ -m[[:space:]]+\'([^\']*)\' ]]; then
