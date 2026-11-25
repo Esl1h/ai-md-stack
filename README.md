@@ -41,11 +41,14 @@ OpenCode loads the global `~/.config/opencode/AGENTS.md` together with the proje
 
 Claude Code only. Doesn't port to OpenCode's plugin system (`tool.execute.before`/`after`) or to AbacusAI CLI, which has no documented hook mechanism.
 
-- `_common.sh`: shared `is_command_invoked()` helper, so a guard fires on `terraform plan` but not on `jq --arg c 'terraform plan'`.
-- `mutation-guard.sh` (`PreToolUse`): blocks write verbs on `aws`/`gh`/`kubectl`/`terraform` and `git push` force variants, with an explicit `ALLOW_MUTATION=1` escape hatch.
-- `commit-guard.sh` (`PreToolUse`): validates `git commit` subjects against the Conventional Commits rules already documented in `AGENTS.md`, rejects attribution trailers, and blocks `--no-verify`.
+- `_common.sh`: shared helpers. `is_command_invoked()` makes a guard fire on `terraform plan` but not on `jq --arg c 'terraform plan'`; `invocation()` scopes a flag check to its own command, so `git commit ... && git log -n 1` is not read as `commit -n`.
+- `mutation-guard.sh` (`PreToolUse`): blocks write verbs on `aws`/`gh`/`kubectl`/`terraform` and `git push` force variants. `kubectl --dry-run` passes. Escape hatch: prefix the command with `ALLOW_MUTATION=1`.
+- `commit-guard.sh` (`PreToolUse`): validates `git commit` subjects against the Conventional Commits rules already documented in `AGENTS.md`, rejects attribution trailers, and blocks `--no-verify` (same `ALLOW_MUTATION=1` prefix).
+- `test.sh`: runs synthetic `PreToolUse` payloads through the two guards. `hooks/test.sh ~/.claude/hooks` tests the installed copies.
 - `session-context.sh` (`SessionStart`): injects current branch, dirty file count, and last commit into context.
 - `redact-secrets.sh` (`PostToolUse`): redacts leaked secrets (GitHub/OpenAI/Anthropic tokens, AWS access keys, PEM blocks) from command output, strips known noise, and truncates large output, via `updatedToolOutput`.
+
+The guards read the command text and a guard only matches a command in command position, which is why the prefix works. They catch the common slips, not a determined bypass: `git -C dir push -f`, combined short flags (`-nm`) and `git commit -s` are not seen.
 
 All shellcheck-clean and `bash -n` validated.
 
