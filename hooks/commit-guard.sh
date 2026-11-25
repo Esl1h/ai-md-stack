@@ -17,7 +17,7 @@ commit="$(invocation "$line" git | grep -E 'git[[:space:]]+commit\b' || true)" #
 [ -z "$commit" ] && exit 0
 
 if printf '%s' "$commit" | grep -qE '[[:space:]](--no-verify|-n)([[:space:]]|$)'; then
-  deny "git commit --no-verify blocked (AGENTS.md: no bypassing checks without justification)."
+  deny "git commit --no-verify blocked (AGENTS.md: no bypassing checks without justification). If justified, re-run with ALLOW_MUTATION=1 <command>."
 fi
 
 subject=""
