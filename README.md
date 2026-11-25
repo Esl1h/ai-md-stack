@@ -56,6 +56,27 @@ All shellcheck-clean and `bash -n` validated.
 
 Also running [RTK](https://www.rtk-ai.app/) (Rust Token Killer), a CLI proxy that rewrites shell commands before execution to cut token usage. Registered as its own `PreToolUse` hook, separate from the ones in `hooks/`.
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh
+rtk init -g --opencode
+```
+
+`rtk init -g` registers the hook and writes `~/.claude/RTK.md`, plus the `@RTK.md` import that ends `AGENTS.md`. `--opencode` also installs the OpenCode plugin (`~/.config/opencode/plugins/rtk.ts`). Those files are generated, so they are not versioned here.
+
+## ai-memory
+
+[ai-memory](https://github.com/akitaonrails/ai-memory) gives the agents long-term memory: lifecycle hooks, an MCP server and skills. On this host it is wired into Claude Code, OpenCode and AbacusAI CLI. Its hooks carry machine-specific paths and a local port, so `settings.example.json` does not include them.
+
+```bash
+curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+ai-memory setup
+ai-memory setup --agent opencode2
+```
+
+`setup` shows its plan and asks before applying, and re-running changes nothing. OpenCode 2 is only wired when named with `--agent`. It writes `~/.config/opencode/plugins/ai-memory-opencode2.ts`, which is generated and not versioned.
+
+Both installers pipe a remote script to `sh`: read the script before running it.
+
 ## Usage
 
 ```bash
@@ -100,4 +121,5 @@ Skills are discovered by their `description`, so `AGENTS.md` does not list them.
 - `diagram-design`: [github.com/cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design), `npx skills add cathrynlavery/diagram-design`.
 - `cf-cli`: the skill for Cloudflare's [`cf` CLI](https://github.com/cloudflare/cf), which installs with `npm i -g cf`. The npm package does not ship the skill, and its source repo is not recorded, so install the CLI and copy the skill folder from an existing host.
 - `v-repo-audit`: my own, a single `SKILL.md` kept locally and not versioned. Copy `~/.agents/skills/v-repo-audit/` from an existing host and link it like the `humanize-*` skills.
-- `ponytail`: a Claude Code plugin, not a skill folder. Source: [github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Install with `/plugin marketplace add DietrichGebert/ponytail`, then `/plugin install ponytail@ponytail`.
+- `ponytail`: a plugin for Claude Code and OpenCode, not a skill folder. Source: [github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Claude Code: `/plugin marketplace add DietrichGebert/ponytail`, then `/plugin install ponytail@ponytail`. OpenCode 2: add `@dietrichgebert/ponytail` to the `plugins` array of `~/.config/opencode/opencode.json`.
+- `rust-analyzer-lsp`: a Claude Code LSP plugin, not a skill. `/plugin install rust-analyzer-lsp@claude-plugins-official`.
