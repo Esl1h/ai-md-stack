@@ -97,5 +97,7 @@ Skills are discovered by their `description`, so `AGENTS.md` does not list them.
 - `humanize-ai-slop`: [github.com/Esl1h/humanize-ai-slop](https://github.com/Esl1h/humanize-ai-slop), symlinked the same way.
 - `hallmark`: [github.com/Nutlope/hallmark](https://github.com/Nutlope/hallmark), `npx skills add Nutlope/hallmark`.
 - `find-skills`: [github.com/vercel-labs/skills](https://github.com/vercel-labs/skills), `npx skills add vercel-labs/skills`.
-- `cf-cli`, `diagram-design`, `v-repo-audit`: in `~/.agents/skills/` but absent from `~/.agents/.skill-lock.json`, so the source repo is not recorded here.
+- `diagram-design`: [github.com/cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design), `npx skills add cathrynlavery/diagram-design`.
+- `cf-cli`: the skill for Cloudflare's [`cf` CLI](https://github.com/cloudflare/cf), which installs with `npm i -g cf`. The npm package does not ship the skill, and its source repo is not recorded, so install the CLI and copy the skill folder from an existing host.
+- `v-repo-audit`: my own, a single `SKILL.md` kept locally and not versioned. Copy `~/.agents/skills/v-repo-audit/` from an existing host and link it like the `humanize-*` skills.
 - `ponytail`: a Claude Code plugin, not a skill folder. Source: [github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Install with `/plugin marketplace add DietrichGebert/ponytail`, then `/plugin install ponytail@ponytail`.
