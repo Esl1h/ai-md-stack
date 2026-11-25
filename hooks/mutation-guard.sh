@@ -28,8 +28,10 @@ if is_command_invoked "$line" 'gh' \
   deny "gh write call blocked. $escape_hint"
 fi
 
-if is_command_invoked "$line" 'kubectl' \
-  && printf '%s' "$line" | grep -qE "kubectl[[:space:]]+(apply|delete|replace|patch|scale|create|edit|cordon|uncordon|drain|taint|label|annotate|expose|exec)\b|kubectl[[:space:]]+rollout[[:space:]]+(restart|undo|pause|resume)\b"; then
+# A dry run changes nothing, so it passes (AGENTS.md asks for `kubectl apply --dry-run=server`).
+if invocation "$line" kubectl \
+  | grep -E "kubectl[[:space:]]+(apply|delete|replace|patch|scale|create|edit|cordon|uncordon|drain|taint|label|annotate|expose|exec)\b|kubectl[[:space:]]+rollout[[:space:]]+(restart|undo|pause|resume)\b" \
+  | grep -qvE -- "--dry-run(=(client|server|true))?([[:space:]]|$)"; then
   deny "kubectl write call blocked. $escape_hint"
 fi
 
