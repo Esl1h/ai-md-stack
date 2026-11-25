@@ -78,7 +78,7 @@ All three tools accept the same skill format, a directory named after the skill 
 - **OpenCode**: `~/.config/opencode/skills/`, `~/.claude/skills/`, and `~/.agents/skills/`
 - **AbacusAI**: `~/.abacusai/skills/` and `~/.agents/skills/`
 
-`~/.agents/skills/` is read by every tool except Claude Code, and it's where the [`skills`](https://github.com/vercel-labs/skills) CLI (`npx skills add <repo>`) installs, so it's the canonical folder. Claude Code needs one more symlink per skill. A skill versioned in its own repository, such as `humanize-br` ([github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br)), gets two links:
+`~/.agents/skills/` is read by every tool except Claude Code, and it's where the [`skills`](https://github.com/vercel-labs/skills) CLI installs, so it's the canonical folder. Third-party skills go in with `npx skills add <repo>`, which is what makes one install available to OpenCode and the other tools as well as Claude Code: it writes to `~/.agents/skills/` and, with `claude-code` among the selected agents, creates the `~/.claude/skills/` symlink too. Only a skill you link by hand needs the second link yourself. A skill versioned in its own repository, such as `humanize-br` ([github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br)), gets two links:
 
 ```bash
 ln -s ~/GIT/humanize-br ~/.agents/skills/humanize-br
@@ -95,7 +95,9 @@ Skills are discovered by their `description`, so `AGENTS.md` does not list them.
 
 - `humanize-br`: [github.com/Esl1h/humanize-br](https://github.com/Esl1h/humanize-br), symlinked as shown above.
 - `humanize-ai-slop`: [github.com/Esl1h/humanize-ai-slop](https://github.com/Esl1h/humanize-ai-slop), symlinked the same way.
-- `hallmark`: [github.com/Nutlope/hallmark](https://github.com/Nutlope/hallmark), installed with `npx skills add`.
-- `find-skills`: [github.com/vercel-labs/skills](https://github.com/vercel-labs/skills), installed with `npx skills add`.
-- `cf-cli`, `diagram-design`, `v-repo-audit`: plain folders in `~/.agents/skills/`; no source is recorded, so copy them from an existing host.
+- `hallmark`: [github.com/Nutlope/hallmark](https://github.com/Nutlope/hallmark), `npx skills add Nutlope/hallmark`.
+- `find-skills`: [github.com/vercel-labs/skills](https://github.com/vercel-labs/skills), `npx skills add vercel-labs/skills`.
+- `diagram-design`: [github.com/cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design), `npx skills add cathrynlavery/diagram-design`.
+- `cf-cli`: the skill for Cloudflare's [`cf` CLI](https://github.com/cloudflare/cf), which installs with `npm i -g cf`. The npm package does not ship the skill, and its source repo is not recorded, so install the CLI and copy the skill folder from an existing host.
+- `v-repo-audit`: my own, a single `SKILL.md` kept locally and not versioned. Copy `~/.agents/skills/v-repo-audit/` from an existing host and link it like the `humanize-*` skills.
 - `ponytail`: a Claude Code plugin, not a skill folder. Source: [github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail). Install with `/plugin marketplace add DietrichGebert/ponytail`, then `/plugin install ponytail@ponytail`.
